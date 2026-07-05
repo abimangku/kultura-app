@@ -1,0 +1,37 @@
+services:
+  kultura:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kultura-app
+    restart: unless-stopped
+    expose:
+      - "3000"
+    volumes:
+      - /home/ubuntu/home/kultura-app/public/images:/app/public/images:ro
+      - /home/ubuntu/home/kultura-app/public/videos:/app/public/videos:ro
+      - nextjs-cache:/app/.next/cache
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - GOOGLE_SHEET_WEBHOOK=${GOOGLE_SHEET_WEBHOOK}
+      - VIRTUAL_HOST=${DOMAIN}
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - proxy-network
+
+volumes:
+  nextjs-cache:
+
+networks:
+  proxy-network:
+    external: true
+    name: proxy-network
