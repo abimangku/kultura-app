@@ -46,8 +46,8 @@ certbot-www/
 *.tsbuildinfo
 next-env.d.ts
 
-# Videos — serve from VPS directly
-public/videos/
+# Testimonial videos — too large for Vercel (28-62MB each), serve from CDN
+public/videos/testimoni-*.mp4
 
-# Static assets — served directly from VPS via Nginx
-public/images/
+# Hero webm — 5.8MB exceeds Vercel 4.5MB limit, mp4 fallback is sufficient
+public/videos/hero-bg.webm
